@@ -100,10 +100,10 @@ class XMLDataset(CocoDataset):
                 for cat in categories:
                     if category == cat["name"]:
                         cat_id = cat["id"]
-                xmin = int(_object.find("bndbox").find("xmin").text)
-                ymin = int(_object.find("bndbox").find("ymin").text)
-                xmax = int(_object.find("bndbox").find("xmax").text)
-                ymax = int(_object.find("bndbox").find("ymax").text)
+                xmin = int(float(_object.find("bndbox").find("xmin").text))
+                ymin = int(float(_object.find("bndbox").find("ymin").text))
+                xmax = int(float(_object.find("bndbox").find("xmax").text))
+                ymax = int(float(_object.find("bndbox").find("ymax").text))
                 w = xmax - xmin
                 h = ymax - ymin
                 if w < 0 or h < 0:
