@@ -40,11 +40,13 @@ model:
           name: GIoULoss
           loss_weight: 2.0
 
+class_names: &class_names ['rc_car']  #Please fill in the category names (not include background category)
 data:
   train:
     name: XMLDataset
-    img_path: /home/drone_vision/nanodet/Dataset/Train_Images  #Please fill in train image path
-    ann_path: /home/drone_vision/nanodet/Dataset/Train_Annotations  #Please fill in train xml path
+    class_names: *class_names
+    img_path: /home/drone_vision/Repos/zjiao19-nanodet/nanodet/Dataset/Train_Images  #Please fill in train image path
+    ann_path: /home/drone_vision/Repos/zjiao19-nanodet/nanodet/Dataset/Train_Annotations  #Please fill in train xml path
     input_size: [320,320] #[w,h]
     keep_ratio: True
     pipeline:
@@ -61,8 +63,9 @@ data:
       normalize: [[103.53, 116.28, 123.675], [57.375, 57.12, 58.395]]
   val:
     name: XMLDataset
-    img_path: /home/drone_vision/nanodet/Dataset/Val_Images #Please fill in val image path
-    ann_path: /home/drone_vision/nanodet/Dataset/Val_Annotations #Please fill in val xml path
+    class_names: *class_names
+    img_path: /home/drone_vision/Repos/zjiao19-nanodet/nanodet/Dataset/Val_Images #Please fill in val image path
+    ann_path: /home/drone_vision/Repos/zjiao19-nanodet/nanodet/Dataset/Val_Annotations #Please fill in val xml path
     input_size: [320,320] #[w,h]
     keep_ratio: True
     pipeline:
@@ -95,5 +98,3 @@ evaluator:
 
 log:
   interval: 10
-
-class_names: ['rc_car'] 
