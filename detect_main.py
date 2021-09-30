@@ -7,6 +7,7 @@ from nanodet.util import cfg, load_config, Logger
 from nanodet.model.arch import build_model
 from nanodet.util import load_model_weight
 from nanodet.data.transform import Pipeline
+from datetime import datetime
 
 image_ext = ['.jpg', '.jpeg', '.webp', '.bmp', '.png']
 video_ext = ['mp4', 'mov', 'avi', 'mkv']
@@ -102,13 +103,24 @@ def main():
                 break
     elif args.demo == 'video' or args.demo == 'webcam':
         cap = cv2.VideoCapture(args.path if args.demo == 'video' else args.camid)
+        frame_num = 0
+        start_time = datetime.now()
+        print("Start Time =", start_time.strftime("%H:%M:%S"))
         while True:
             ret_val, frame = cap.read()
-            meta, res = predictor.inference(frame)
+            try:
+                meta, res = predictor.inference(frame)
+            except AttributeError:
+                break
             predictor.visualize(res, meta, cfg.class_names, 0.35)
+            frame_num += 1
             ch = cv2.waitKey(1)
             if ch == 27 or ch == ord('q') or ch == ord('Q'):
                 break
+        end_time = datetime.now()
+        print("End Time =", end_time.strftime("%H:%M:%S"))
+        print("Total Time =", end_time-start_time)
+        print("Average FPS =", frame_num/(end_time-start_time).total_seconds())
 
 
 if __name__ == '__main__':
