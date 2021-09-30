@@ -11,6 +11,7 @@ from nanodet.data.transform import Pipeline
 from nanodet.model.arch import build_model
 from nanodet.util import Logger, cfg, load_config, load_model_weight
 from nanodet.util.path import mkdir
+from datetime import datetime
 
 image_ext = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 video_ext = ["mp4", "mov", "avi", "mkv"]
@@ -99,7 +100,7 @@ def main():
 
     load_config(cfg, args.config)
     logger = Logger(local_rank, use_tensorboard=False)
-    predictor = Predictor(cfg, args.model, logger, device="cuda:0")
+    predictor = Predictor(cfg, args.model, logger, device="cpu")
     logger.log('Press "Esc", "q" or "Q" to exit.')
     current_time = time.localtime()
     if args.demo == "image":
@@ -135,11 +136,14 @@ def main():
             if args.demo == "video"
             else os.path.join(save_folder, "camera.mp4")
         )
+        frame_num = 0
+        start_time = datetime.now()
         print(f"save_path is {save_path}")
         vid_writer = cv2.VideoWriter(
             save_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
         )
         while True:
+            frame_num += 1
             ret_val, frame = cap.read()
             if ret_val:
                 meta, res = predictor.inference(frame)
@@ -151,6 +155,11 @@ def main():
                     break
             else:
                 break
+        end_time = datetime.now()
+        print("End Time =", end_time.strftime("%H:%M:%S"))
+        print("Total Time =", end_time-start_time)
+        print("Average FPS =", frame_num/(end_time-start_time).total_seconds())
+
 
 
 if __name__ == "__main__":
