@@ -2,7 +2,8 @@ import torch
 import torch.nn.functional as F
 
 import re
-from torch._six import container_abcs, string_classes, int_classes
+import collections.abc as container_abcs
+from torch._six import string_classes, int_classes
 
 
 np_str_obj_array_pattern = re.compile(r'[SaUO]')
